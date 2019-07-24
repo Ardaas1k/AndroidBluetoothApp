@@ -9,8 +9,6 @@ public class deviceAdapter(val items: ArrayList<parcelabelBluetoothDevices>, val
     override fun onBindViewHolder(holder: MainActivity.ViewHolder, position: Int){
         holder.deviceNameTxt.text = items.get(position).deviceNameLine
         holder.deviceAddressTxt.text=items.get(position).deviceAddressLine
-
-
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainActivity.ViewHolder {
@@ -20,7 +18,5 @@ public class deviceAdapter(val items: ArrayList<parcelabelBluetoothDevices>, val
     override fun getItemCount(): Int {
         return items.size
     }
-
-
 
 }

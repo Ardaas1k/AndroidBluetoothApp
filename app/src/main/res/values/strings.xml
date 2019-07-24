@@ -4,4 +4,7 @@
     <string name="on">on</string>
     <string name="enable">enable</string>
     <string name="search">Search</string>
+    <string name="reset">Reset</string>
+    <string name="stop_searching">Stop Searching</string>
+    <string name="status">Status</string>
 </resources>
