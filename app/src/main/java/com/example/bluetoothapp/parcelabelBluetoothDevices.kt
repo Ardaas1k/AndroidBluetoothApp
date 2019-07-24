@@ -1,5 +1,6 @@
 package com.example.bluetoothapp
 
+import android.icu.text.Transliterator
 import android.os.Parcel
 import android.os.Parcelable
 
@@ -15,6 +16,7 @@ class parcelabelBluetoothDevices(val deviceNameLine:String,val deviceAddressLine
     override fun describeContents(): Int {
         return 0
     }
+
 
     companion object CREATOR : Parcelable.Creator<parcelabelBluetoothDevices> {
         override fun createFromParcel(parcel: Parcel): parcelabelBluetoothDevices {

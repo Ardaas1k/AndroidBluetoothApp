@@ -6,9 +6,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 
 public class deviceAdapter(val items: ArrayList<parcelabelBluetoothDevices>, val context: Context) : RecyclerView.Adapter<MainActivity.ViewHolder>() {
-    override fun onBindViewHolder(holder: MainActivity.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: MainActivity.ViewHolder, position: Int){
         holder.deviceNameTxt.text = items.get(position).deviceNameLine
         holder.deviceAddressTxt.text=items.get(position).deviceAddressLine
+
 
     }
 
@@ -19,4 +20,7 @@ public class deviceAdapter(val items: ArrayList<parcelabelBluetoothDevices>, val
     override fun getItemCount(): Int {
         return items.size
     }
+
+
+
 }
