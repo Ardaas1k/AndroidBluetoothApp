@@ -7,4 +7,5 @@
     <string name="reset">Reset</string>
     <string name="stop_searching">Stop Searching</string>
     <string name="status">Status</string>
+    <string name="enable_bluetooth">enable Bluetooth</string>
 </resources>

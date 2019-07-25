@@ -9,8 +9,6 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.os.Build
-import android.os.Bundle
 import android.util.Log
 import android.util.Log.d
 import android.view.View
@@ -21,9 +19,10 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_list.view.deviceAddressLine
 import kotlinx.android.synthetic.main.activity_list.view.deviceNameLine
-import android.bluetooth.BluetoothSocket
-import androidx.fragment.app.FragmentActivity
-import java.io.IOException
+import android.bluetooth.le.BluetoothLeScanner
+import android.bluetooth.le.ScanCallback
+import android.bluetooth.le.ScanResult
+import android.os.*
 
 
 class MainActivity : AppCompatActivity() {
@@ -37,6 +36,7 @@ class MainActivity : AppCompatActivity() {
     val bluetoothAdapter: BluetoothAdapter? = BluetoothAdapter.getDefaultAdapter()
 
 
+
     @SuppressLint("NewApi")
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     @RequiresApi(Build.VERSION_CODES.JELLY_BEAN)
@@ -44,26 +44,26 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-
-
         arrDeviceList=ArrayList<parcelabelBluetoothDevices>()
-
         setListeners()
         setRegisters()
-        //checkPairedDeviceStatus()
 
     }
 
+
+
+
     // Create a BroadcastReceiver for ACTION_FOUND.
-    private val receiver = object : BroadcastReceiver() {
+    private val receiver = object : BroadcastReceiver(){
+        @SuppressLint("NewApi")
+        @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+        @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
         override fun onReceive(context: Context, intent: Intent) {
             val action: String? = intent.action
             when (action) {
                 BluetoothDevice.ACTION_FOUND -> {
-                    // Discovery has found a device. Get the BluetoothDevice
-                    // object and its info from the Intent.
                     val device: BluetoothDevice = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)
-                    if(device.bondState!=BluetoothDevice.BOND_BONDED){
+
                         var deviceName = device.name
                         if(device.name==null){
                             deviceName="N/A"
@@ -72,7 +72,7 @@ class MainActivity : AppCompatActivity() {
                         val newDevice = parcelabelBluetoothDevices(deviceName, deviceHardwareAddress)
                         insertItem(newDevice)
 
-                    }
+
 
                 }
             }
@@ -103,6 +103,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
 
     private fun insertItem(newDevice: parcelabelBluetoothDevices) {
         arrDeviceList.add(newDevice)
@@ -178,8 +179,10 @@ class MainActivity : AppCompatActivity() {
 
         return bool
     }
-    
-    @SuppressLint("NewApi")
+
+
+
+    @SuppressLint("NewApi", "SetTextI18n")
     @TargetApi(Build.VERSION_CODES.M)
     @RequiresApi(Build.VERSION_CODES.M)
     public fun setListeners(){
@@ -212,7 +215,12 @@ class MainActivity : AppCompatActivity() {
         }))
 
         searchDeviceBtn.setOnClickListener {
-            textView.text="Searching Started"
+            if(bluetoothAdapter?.isEnabled==false){
+                textView.text="please enable bluetooth from blow"
+            }else{
+                textView.text="Searching Started"
+            }
+
             if (bluetoothAdapter!!.isDiscovering()) {
                 arrDeviceList.clear()
                 textView.text="Searching Started Again"
