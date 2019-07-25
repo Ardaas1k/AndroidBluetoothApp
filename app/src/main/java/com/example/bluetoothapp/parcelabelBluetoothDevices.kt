@@ -17,7 +17,6 @@ class parcelabelBluetoothDevices(val deviceNameLine:String,val deviceAddressLine
         return 0
     }
 
-
     companion object CREATOR : Parcelable.Creator<parcelabelBluetoothDevices> {
         override fun createFromParcel(parcel: Parcel): parcelabelBluetoothDevices {
             return parcelabelBluetoothDevices(parcel.toString())
