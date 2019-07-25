@@ -44,6 +44,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+
+
         arrDeviceList=ArrayList<parcelabelBluetoothDevices>()
 
         setListeners()
@@ -61,13 +63,17 @@ class MainActivity : AppCompatActivity() {
                     // Discovery has found a device. Get the BluetoothDevice
                     // object and its info from the Intent.
                     val device: BluetoothDevice = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)
-                    var deviceName = device.name
-                    if (deviceName==null){
-                        deviceName="Unknown"
+                    if(device.bondState!=BluetoothDevice.BOND_BONDED){
+                        var deviceName = device.name
+                        if(device.name==null){
+                            deviceName="N/A"
+                        }
+                        val deviceHardwareAddress = device.address // MAC address
+                        val newDevice = parcelabelBluetoothDevices(deviceName, deviceHardwareAddress)
+                        insertItem(newDevice)
+
                     }
-                    val deviceHardwareAddress = device.address // MAC address
-                    val newDevice = parcelabelBluetoothDevices(deviceName, deviceHardwareAddress)
-                    insertItem(newDevice)
+
                 }
             }
         }
@@ -231,6 +237,15 @@ class MainActivity : AppCompatActivity() {
 
         }
 
+        stop_SearchBtn.setOnClickListener {
+            bluetoothAdapter!!.cancelDiscovery()
+            textView.text="Searching Stopped"
+            arrDeviceList.clear()
+            list_Devices.layoutManager = LinearLayoutManager(this) as RecyclerView.LayoutManager?
+            list_Devices.adapter = deviceAdapter(arrDeviceList, this)
+
+        }
+
         enableBtn.setOnClickListener {
             if (bluetoothAdapter?.isEnabled == false) {
                 val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
@@ -260,9 +275,10 @@ class MainActivity : AppCompatActivity() {
             val deviceHardwareAddress = device.address // MAC address
             d(TAG, "PairedDevice: deviceName = $deviceName")
             d(TAG, "PairedDevice: deviceAddress = $deviceHardwareAddress")
-            textView.text="PairedDevice = $deviceName"
         }
+        textView.text="$pairedDevices"
     }
+
 }
 
 
