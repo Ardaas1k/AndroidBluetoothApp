@@ -178,9 +178,7 @@ class MainActivity : AppCompatActivity() {
 
         return bool
     }
-
-
-
+    
     @SuppressLint("NewApi")
     @TargetApi(Build.VERSION_CODES.M)
     @RequiresApi(Build.VERSION_CODES.M)
@@ -214,7 +212,10 @@ class MainActivity : AppCompatActivity() {
         }))
 
         searchDeviceBtn.setOnClickListener {
+            textView.text="Searching Started"
             if (bluetoothAdapter!!.isDiscovering()) {
+                arrDeviceList.clear()
+                textView.text="Searching Started Again"
                 bluetoothAdapter.cancelDiscovery()
                 this.checkBTPermissions()
                 bluetoothAdapter.startDiscovery()
