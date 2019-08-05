@@ -1,16 +1,18 @@
 package com.example.bluetoothapp
 
-import android.icu.text.Transliterator
 import android.os.Parcel
+import android.os.ParcelUuid
 import android.os.Parcelable
+import java.util.*
 
-class parcelabelBluetoothDevices(val deviceNameLine:String,val deviceAddressLine:String) : Parcelable {
+class parcelabelBluetoothDevices(val deviceNameLine:String, val deviceAddressLine:String) : Parcelable {
     constructor(parcel: String) : this(parcel,parcel) {
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(deviceNameLine)
         parcel.writeString(deviceAddressLine)
+
     }
 
     override fun describeContents(): Int {

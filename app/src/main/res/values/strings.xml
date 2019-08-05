@@ -8,4 +8,10 @@
     <string name="stop_searching">Stop Searching</string>
     <string name="status">Status</string>
     <string name="enable_bluetooth">enable Bluetooth</string>
+    <string name="discoverable_enable">Discoverable Enable</string>
+    <string name="textview">TextView</string>
+    <string name="send">Send</string>
+    <string name="connect_to_bonded_device">Connect to bonded device</string>
+    <string name="listen">Listen</string>
+
 </resources>
