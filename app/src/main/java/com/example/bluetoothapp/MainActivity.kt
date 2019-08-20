@@ -14,6 +14,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.pm.ActivityInfo
 import android.os.Build
 import android.os.Bundle
 import android.os.ParcelUuid
@@ -43,7 +44,7 @@ class MainActivity : AppCompatActivity() {
         private val REQUEST_ENABLE_BT = 0
         var arrDeviceList: ArrayList<parcelabelBluetoothDevices> = ArrayList()
         val bluetoothAdapter: BluetoothAdapter? = BluetoothAdapter.getDefaultAdapter()
-        private val appName = "MYAPP"
+        val appName = "MYAPP"
         var MY_INSECUREUUID:UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB")
         var mBTDevice: BluetoothDevice? = null
         var uuids: ArrayList<ParcelUuid>? = null
@@ -52,7 +53,7 @@ class MainActivity : AppCompatActivity() {
         lateinit var mConnectedThread: ConnectedThread
 
     }
-
+    //Discovering Bluetooth Devices
     private val receiver = object : BroadcastReceiver(){
         @SuppressLint("NewApi")
         @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -76,7 +77,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-
+    //Bond state changes feedbacks
     private val receiver2 = object : BroadcastReceiver() {
         @SuppressLint("SetTextI18n")
         override fun onReceive(context: Context, intent: Intent) {
@@ -101,7 +102,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-
+    //Bond State changes feedbacks
     private val receiver3 = object : BroadcastReceiver() {
 
         @SuppressLint("SetTextI18n")
@@ -154,12 +155,14 @@ class MainActivity : AppCompatActivity() {
         unregisterReceiver(receiver3)
     }
 
+    //Activity_Main
     @SuppressLint("NewApi")
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     @RequiresApi(Build.VERSION_CODES.JELLY_BEAN)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
 
         arrDeviceList=ArrayList()
         setListeners()
@@ -167,6 +170,7 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    //Insert to ArrayList and Recyclerview
     private fun insertItem(newDevice: parcelabelBluetoothDevices) {
         arrDeviceList.add(newDevice)
         arrDeviceList.distinct()
@@ -174,11 +178,13 @@ class MainActivity : AppCompatActivity() {
         list_Devices.adapter = deviceAdapter(arrDeviceList, this)
     }
 
+    //Recyclerviews viewholder
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val deviceNameTxt = view.deviceNameLine
         val deviceAddressTxt = view.deviceAddressLine
     }
 
+    //Permission request to user
     @TargetApi(Build.VERSION_CODES.M)
     @RequiresApi(Build.VERSION_CODES.M)
     private fun checkBTPermissions() {
@@ -193,11 +199,12 @@ class MainActivity : AppCompatActivity() {
                         Manifest.permission.ACCESS_COARSE_LOCATION,
                         Manifest.permission.BLUETOOTH_ADMIN
                     ), 1001
-                ) //Any number
+                )
             }
         }
     }
 
+    //Pairing prosess createBond() method this is not connecting proses
     @Throws(Exception::class)
     fun createBond(btDevice: BluetoothDevice): Boolean {
         val class1 = Class.forName("android.bluetooth.BluetoothDevice")
@@ -206,8 +213,10 @@ class MainActivity : AppCompatActivity() {
         return returnValue
     }
 
+    //Createbond method calls here
     private fun callThread(btDevice: BluetoothDevice) {
         object : Thread() {
+            @SuppressLint("SetTextI18n")
             override fun run() {
 
                 val isBonded: Boolean?
@@ -221,22 +230,23 @@ class MainActivity : AppCompatActivity() {
         }.start()
     }
 
+
     @SuppressLint("NewApi", "SetTextI18n")
     @TargetApi(Build.VERSION_CODES.M)
     @RequiresApi(Build.VERSION_CODES.M)
     fun setListeners(){
 
         list_Devices.addOnItemTouchListener(RecyclerItemClickListenr(this, list_Devices, object : RecyclerItemClickListenr.OnItemClickListener {
-            @SuppressLint("SetTextI18n")
+            @SuppressLint("SetTextI18n", "ObsoleteSdkInt")
             @TargetApi(Build.VERSION_CODES.M)
             @RequiresApi(Build.VERSION_CODES.M)
             override fun onItemClick(view: View, position: Int) {
                 bluetoothAdapter?.cancelDiscovery()
-                d(Companion.TAG, "onItemClick: You Clicked on a device.")
+                d(TAG, "onItemClick: You Clicked on a device.")
                 val deviceName = arrDeviceList.get(position).deviceNameLine
                 val deviceAddress = arrDeviceList.get(position).deviceAddressLine
-                d(Companion.TAG, "onItemClick: deviceName = $deviceName")
-                d(Companion.TAG, "onItemClick: deviceAddress = $deviceAddress")
+                d(TAG, "onItemClick: deviceName = $deviceName")
+                d(TAG, "onItemClick: deviceAddress = $deviceAddress")
 
                 checkBTPermissions()
 
@@ -282,7 +292,6 @@ class MainActivity : AppCompatActivity() {
                     bluetoothAdapter.startDiscovery()
                     val discoverDevicesIntent = IntentFilter(BluetoothDevice.ACTION_FOUND)
                     registerReceiver(receiver, discoverDevicesIntent)
-
                 }
             }
         }
@@ -315,6 +324,7 @@ class MainActivity : AppCompatActivity() {
 
         statusBtn.setOnClickListener {
             bluetoothAdapter?.cancelDiscovery()
+            checkPairedDeviceStatus()
         }
 
         stop_SearchBtn.setOnClickListener {
@@ -331,6 +341,11 @@ class MainActivity : AppCompatActivity() {
                 val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
                 startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT)
             }
+        }
+
+        camera_pageBtn.setOnClickListener {
+            val intent: Intent = Intent(this,CameraActivity::class.java)
+            startActivity(intent)
         }
     }
 
@@ -349,26 +364,30 @@ class MainActivity : AppCompatActivity() {
             val deviceHardwareAddress = device.address // MAC address
             d(TAG, "PairedDevice: deviceName = $deviceName")
             d(TAG, "PairedDevice: deviceAddress = $deviceHardwareAddress")
+            statusTxt.text="PairedDevice: $deviceName:$$deviceHardwareAddress"
         }
     }
 
+    //Listening process
     inner class AcceptThread : Thread() {
 
         private val mmServerSocket: BluetoothServerSocket? by lazy(LazyThreadSafetyMode.NONE) {
             bluetoothAdapter?.listenUsingRfcommWithServiceRecord(appName, MY_INSECUREUUID)
         }
 
+        @SuppressLint("SetTextI18n")
         override fun run() {
             // Keep listening until exception occurs or a socket is returned.
             var shouldLoop = true
             while (shouldLoop) {
                 val socket: BluetoothSocket? = try {
+                    statusTxt.text="Listening..."
                     Log.e("","Listening")
                     mmServerSocket?.accept()
 
 
                 } catch (e: IOException) {
-                    Log.e(Companion.TAG, "Socket's accept() method failed", e)
+                    Log.e(TAG, "Socket's accept() method failed", e)
                     shouldLoop = false
                     null
                 }
@@ -381,48 +400,54 @@ class MainActivity : AppCompatActivity() {
                 mConnectedThread=ConnectedThread(socket)
                 mConnectedThread.start()
             }
+
             Log.e("","Connected")
 
         }
         // Closes the connect socket and causes the thread to finish.
     }
 
+    //Connecting to listener process
     inner class ConnectThread : Thread() {
 
         var mmSocket: BluetoothSocket? = null
 
+        @SuppressLint("SetTextI18n")
         override fun run() {
             // Cancel discovery because it otherwise slows down the connection.
             bluetoothAdapter?.cancelDiscovery()
-                try {
-                    mmSocket = mBTDevice?.createInsecureRfcommSocketToServiceRecord(MY_INSECUREUUID)
-                    mmSocket?.connect()
-                    Log.e("","Connected")
+            try {
+                mmSocket = mBTDevice?.createInsecureRfcommSocketToServiceRecord(MY_INSECUREUUID)
+                mmSocket?.connect()
+                Log.e("","Connected")
+                statusTxt.text="Connected"
 
-
-                } catch (e:Exception ) {
-                    Log.e("","Error creating socket")
-                }
+            } catch (e:Exception ) {
+                Log.e("","Error creating socket")
+            }
             mConnectedThread=ConnectedThread(mmSocket)
             mConnectedThread.start()
-            }
+        }
     }
 
+    //When device connected reads and writes
     inner class ConnectedThread(socket: BluetoothSocket?) : Thread() {
         val mmSocket=socket
         val mmInStream: InputStream? = mmSocket?.inputStream
         val mmOutStream: OutputStream? = mmSocket?.outputStream
         val mmBuffer = ByteArray(1024) // mmBuffer store for the stream
 
+        @SuppressLint("SetTextI18n")
         override fun run() {
             var bytes: Int // bytes returned from read()
-
+            statusTxt.text="Reading..."
             // Keep listening to the InputStream until an exception occurs.
             while (true) {
                 try {
+
                     bytes = mmInStream!!.read(mmBuffer)
                     val incomingMessage = String(mmBuffer,0,bytes)
-                    statusTxt.text=incomingMessage
+                    statusTxt.text= incomingMessage
                 }catch (ex:IOException){
                     Log.e(TAG, "write: Error reading Input Stream. " + ex.message );
                     break;
@@ -455,6 +480,8 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
+
 }
 
 

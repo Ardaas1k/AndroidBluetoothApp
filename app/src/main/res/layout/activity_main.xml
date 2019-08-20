@@ -69,45 +69,52 @@
             android:ems="10"
             android:id="@+id/sendTxt"
             app:layout_constraintStart_toStartOf="@+id/statusTxt" app:layout_constraintEnd_toEndOf="@+id/statusTxt"
-            android:layout_marginTop="8dp" app:layout_constraintTop_toBottomOf="@+id/statusTxt"
-            android:layout_marginBottom="8dp" app:layout_constraintBottom_toBottomOf="parent" android:autofillHints="Enter a text for sending"
-            tools:targetApi="o"/>
+            android:layout_marginTop="160dp" app:layout_constraintTop_toBottomOf="@+id/statusTxt"
+            android:autofillHints="Enter a text for sending"
+            tools:targetApi="o" app:layout_constraintHorizontal_bias="0.0"/>
     <Button
             android:text="@string/send"
-            android:layout_width="150dp"
-            android:layout_height="50dp"
+            android:layout_width="99dp"
+            android:layout_height="61dp"
             android:id="@+id/sendBtn" android:layout_marginTop="28dp"
             app:layout_constraintTop_toBottomOf="@+id/sendTxt" app:layout_constraintStart_toStartOf="@+id/sendTxt"
             app:layout_constraintEnd_toEndOf="@+id/sendTxt" android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp" app:layout_constraintHorizontal_bias="0.0"/>
+            app:layout_constraintHorizontal_bias="0.0"/>
     <Button
             android:text="@string/discoverable_enable"
-            android:layout_width="150dp"
-            android:layout_height="65dp"
+            android:layout_width="147dp"
+            android:layout_height="63dp"
             android:id="@+id/discoverableBtn" app:layout_constraintStart_toStartOf="@+id/sendTxt"
             app:layout_constraintEnd_toEndOf="@+id/sendTxt" android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp" android:layout_marginTop="28dp"
-            app:layout_constraintTop_toBottomOf="@+id/sendTxt" app:layout_constraintHorizontal_bias="0.979"/>
+            app:layout_constraintHorizontal_bias="0.979" app:layout_constraintTop_toTopOf="@+id/listenBtn"
+            app:layout_constraintBottom_toBottomOf="@+id/listenBtn"/>
     <Button
             android:text="@string/connect_to_bonded_device"
             android:layout_width="250dp"
             android:layout_height="50dp"
             android:id="@+id/connectionBtn" app:layout_constraintEnd_toEndOf="@+id/discoverableBtn"
-            android:layout_marginEnd="8dp" android:layout_marginRight="8dp"
-            app:layout_constraintStart_toStartOf="@+id/sendBtn" android:layout_marginLeft="8dp"
-            android:layout_marginStart="8dp" android:layout_marginTop="8dp"
-            app:layout_constraintTop_toBottomOf="@+id/sendTxt" android:layout_marginBottom="8dp"
-            app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintVertical_bias="0.827"/>
+            android:layout_marginEnd="8dp"
+            app:layout_constraintStart_toStartOf="@+id/sendBtn"
+            android:layout_marginStart="8dp" android:layout_marginTop="120dp"
+            app:layout_constraintTop_toBottomOf="@+id/sendTxt"
+            app:layout_constraintHorizontal_bias="1.0"
+    />
     <Button
             android:text="@string/listen"
+            android:layout_width="115dp"
+            android:layout_height="57dp"
+            android:id="@+id/listenBtn"
+            app:layout_constraintTop_toTopOf="@+id/sendBtn" app:layout_constraintBottom_toBottomOf="@+id/sendBtn"
+            app:layout_constraintStart_toEndOf="@+id/sendBtn" android:layout_marginStart="8dp"/>
+    <Button
+            android:text="Camera"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/listenBtn"
-            app:layout_constraintBottom_toBottomOf="@+id/connectionBtn"
+            android:id="@+id/camera_pageBtn"
             app:layout_constraintTop_toTopOf="@+id/connectionBtn"
-            app:layout_constraintEnd_toStartOf="@+id/connectionBtn" android:layout_marginEnd="5dp"
-            android:layout_marginRight="5dp"/>
+            app:layout_constraintBottom_toBottomOf="@+id/connectionBtn"
+            app:layout_constraintEnd_toStartOf="@+id/connectionBtn" android:layout_marginEnd="32dp"
+            app:layout_constraintVertical_bias="0.0"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
